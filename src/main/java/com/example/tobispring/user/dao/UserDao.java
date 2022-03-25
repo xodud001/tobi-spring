@@ -25,10 +25,14 @@ public class UserDao {
         System.out.println(findUser.getId() + " 조회 성공");
     }
 
-    public void add(User user) throws ClassNotFoundException, SQLException{
+    private Connection getConnection() throws ClassNotFoundException, SQLException {
         Class.forName("org.mariadb.jdbc.Driver");
-        Connection c = DriverManager.getConnection(
+        return DriverManager.getConnection(
                 "jdbc:mariadb://localhost:3306/tobi", "root", "root");
+    }
+
+    public void add(User user) throws ClassNotFoundException, SQLException{
+        Connection c = getConnection();
 
         PreparedStatement ps = c.prepareStatement(
                 "insert into users(id, name, password) values(?,?,?)");
@@ -44,9 +48,7 @@ public class UserDao {
     }
 
     public User get(String id) throws ClassNotFoundException, SQLException{
-        Class.forName("org.mariadb.jdbc.Driver");
-        Connection c = DriverManager.getConnection(
-                "jdbc:mariadb://localhost:3306/tobi", "root", "root");
+        Connection c = getConnection();
 
         PreparedStatement ps = c.prepareStatement(
                 "select * from users where id = ?");
