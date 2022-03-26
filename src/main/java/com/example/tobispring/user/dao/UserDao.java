@@ -6,6 +6,12 @@ import java.sql.*;
 
 public class UserDao {
 
+    private final SimpleConnectionMaker simpleConnectionMaker;
+
+    public UserDao() {
+        this.simpleConnectionMaker = new SimpleConnectionMaker();
+    }
+
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
         UserDao dao = new UserDao();
 
@@ -25,14 +31,9 @@ public class UserDao {
         System.out.println(findUser.getId() + " 조회 성공");
     }
 
-    private Connection getConnection() throws ClassNotFoundException, SQLException {
-        Class.forName("org.mariadb.jdbc.Driver");
-        return DriverManager.getConnection(
-                "jdbc:mariadb://localhost:3306/tobi", "root", "root");
-    }
 
     public void add(User user) throws ClassNotFoundException, SQLException{
-        Connection c = getConnection();
+        Connection c = simpleConnectionMaker.maskNewConnection();
 
         PreparedStatement ps = c.prepareStatement(
                 "insert into users(id, name, password) values(?,?,?)");
@@ -48,7 +49,7 @@ public class UserDao {
     }
 
     public User get(String id) throws ClassNotFoundException, SQLException{
-        Connection c = getConnection();
+        Connection c = simpleConnectionMaker.maskNewConnection();
 
         PreparedStatement ps = c.prepareStatement(
                 "select * from users where id = ?");
