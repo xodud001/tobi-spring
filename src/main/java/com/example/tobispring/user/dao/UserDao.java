@@ -8,29 +8,10 @@ public class UserDao {
 
     private final ConnectionMaker connectionMaker;
 
-    public UserDao() {
-        this.connectionMaker = new DConnectionMaker();
+    public UserDao(ConnectionMaker connectionMaker) {
+        this.connectionMaker = connectionMaker;
     }
-
-    public static void main(String[] args) throws SQLException, ClassNotFoundException {
-        UserDao dao = new UserDao();
-
-        User user = new User();
-        user.setId("dud708");
-        user.setName("김태영");
-        user.setPassword("pa55word");
-
-        dao.add(user);
-
-        System.out.println(user.getId() + " 등록 성공");
-
-        User findUser = dao.get(user.getId());
-        System.out.println(findUser.getName());
-        System.out.println(findUser.getPassword());
-
-        System.out.println(findUser.getId() + " 조회 성공");
-    }
-
+    
 
     public void add(User user) throws ClassNotFoundException, SQLException{
         Connection c = connectionMaker.makeConnection();
