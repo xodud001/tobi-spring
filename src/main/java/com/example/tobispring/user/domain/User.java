@@ -1,5 +1,10 @@
 package com.example.tobispring.user.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
+@AllArgsConstructor
+@NoArgsConstructor
 public class User {
 
     private String id;

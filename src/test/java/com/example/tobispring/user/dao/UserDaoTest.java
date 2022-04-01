@@ -14,26 +14,49 @@ import static org.junit.jupiter.api.Assertions.*;
 class UserDaoTest {
 
     @Test
-    public void addAndGet() throws SQLException, ClassNotFoundException {
+    public void addAndGet() throws SQLException {
         ApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
         UserDao dao = context.getBean("userDao", UserDao.class);
 
+        dao.deleteAll();
+        assertThat(dao.getCount()).isEqualTo(0);
 
-        User user = new User();
-        user.setId("dud708");
-        user.setName("김태영");
-        user.setPassword("pa55word");
-        dao.add(user);
+        User user1 = new User("dud708", "김태영", "pa55word");
+        User user2 = new User("adszzz1", "리상민", "pa55word");
+        dao.add(user1);
+        dao.add(user2);
 
-        System.out.println(user.getId() + " 등록 성공");
+        assertThat(dao.getCount()).isEqualTo(2);
 
-        User findUser = dao.get(user.getId());
-        System.out.println(findUser.getName());
-        System.out.println(findUser.getPassword());
+        User findUser1 = dao.get(user1.getId());
+        assertThat(user1.getName()).isEqualTo(findUser1.getName());
+        assertThat(user1.getPassword()).isEqualTo(findUser1.getPassword());
+        User findUser2 = dao.get(user2.getId());
+        assertThat(user2.getName()).isEqualTo(findUser2.getName());
+        assertThat(user2.getPassword()).isEqualTo(findUser2.getPassword());
+    }
 
-        System.out.println(findUser.getId() + " 조회 성공");
+    @Test
+    public void count() throws SQLException {
+        ApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
+        UserDao dao = context.getBean("userDao", UserDao.class);
 
-        assertThat(user.getName()).isEqualTo(findUser.getName());
-        assertThat(user.getPassword()).isEqualTo(findUser.getPassword());
+        User user1 = new User("dud708", "김태영", "pa55word");
+        User user2 = new User("adszzz1", "이상민", "pa55word");
+        User user3 = new User("qudtls351", "김동영", "pa55word");
+
+        dao.deleteAll();
+        assertThat(dao.getCount()).isEqualTo(0);
+
+        dao.add(user1);
+        assertThat(dao.getCount()).isEqualTo(1);
+
+        dao.add(user2);
+        assertThat(dao.getCount()).isEqualTo(2);
+
+        dao.add(user3);
+        assertThat(dao.getCount()).isEqualTo(3);
+
+
     }
 }
