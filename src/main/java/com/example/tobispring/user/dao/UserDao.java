@@ -1,6 +1,7 @@
 package com.example.tobispring.user.dao;
 
 import com.example.tobispring.user.domain.User;
+import org.springframework.dao.EmptyResultDataAccessException;
 
 import javax.sql.DataSource;
 import javax.xml.crypto.Data;
@@ -38,17 +39,19 @@ public class UserDao {
 
         ps.setString(1, id);
         ResultSet rs = ps.executeQuery();
-        rs.next();
-
-        User user = new User();
-        user.setId(rs.getString("id"));
-        user.setName(rs.getString("name"));
-        user.setPassword(rs.getString("password"));
+        User user = null;
+        if(rs.next()){
+            user = new User();
+            user.setId(rs.getString("id"));
+            user.setName(rs.getString("name"));
+            user.setPassword(rs.getString("password"));
+        }
 
         rs.close();
         ps.close();
         c.close();
 
+        if(user == null) throw new EmptyResultDataAccessException(1);
         return user;
     }
 
