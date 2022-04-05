@@ -2,6 +2,7 @@ package com.example.tobispring.user.dao;
 
 import com.example.tobispring.user.domain.User;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -14,11 +15,16 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class UserDaoTest {
 
+    private UserDao dao;
+
+    @BeforeEach
+    public void setup(){
+        ApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
+        dao = context.getBean("userDao", UserDao.class);
+    }
+
     @Test
     public void addAndGet() throws SQLException {
-        ApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
-        UserDao dao = context.getBean("userDao", UserDao.class);
-
         dao.deleteAll();
         assertThat(dao.getCount()).isEqualTo(0);
 
@@ -39,9 +45,6 @@ class UserDaoTest {
 
     @Test
     public void count() throws SQLException {
-        ApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
-        UserDao dao = context.getBean("userDao", UserDao.class);
-
         User user1 = new User("dud708", "김태영", "pa55word");
         User user2 = new User("adszzz1", "이상민", "pa55word");
         User user3 = new User("qudtls351", "김동영", "pa55word");
@@ -62,9 +65,6 @@ class UserDaoTest {
 
     @Test
     void getUserFailure() throws SQLException {
-        ApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
-        UserDao dao = context.getBean("userDao", UserDao.class);
-
         dao.deleteAll();
         assertThat(dao.getCount()).isEqualTo(0);
 
