@@ -1,16 +1,17 @@
 package com.example.tobispring.user.dao;
 
 import com.example.tobispring.user.domain.User;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.datasource.SingleConnectionDataSource;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import javax.sql.DataSource;
 import java.sql.SQLException;
 
 import static org.assertj.core.api.Assertions.*;
@@ -18,10 +19,22 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes=DaoFactory.class)
+@DirtiesContext
 class UserDaoTest {
 
     @Autowired
     private UserDao dao;
+
+    @BeforeEach
+    public void setup(){
+        DataSource dataSource = new SingleConnectionDataSource(
+                "jdbc:mariadb://localhost:3306/tobi",
+                "root",
+                "root",
+                true
+        );
+        dao.setDataSource(dataSource);
+    }
 
     @Test
     public void addAndGet() throws SQLException {
