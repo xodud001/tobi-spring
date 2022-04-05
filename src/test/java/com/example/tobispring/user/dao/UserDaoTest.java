@@ -18,23 +18,11 @@ import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes=DaoFactory.class)
-@DirtiesContext
+@ContextConfiguration(classes=TestDaoFactory.class)
 class UserDaoTest {
 
     @Autowired
     private UserDao dao;
-
-    @BeforeEach
-    public void setup(){
-        DataSource dataSource = new SingleConnectionDataSource(
-                "jdbc:mariadb://localhost:3306/tobi",
-                "root",
-                "root",
-                true
-        );
-        dao.setDataSource(dataSource);
-    }
 
     @Test
     public void addAndGet() throws SQLException {
